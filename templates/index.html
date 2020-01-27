@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- LEAFLET -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+      integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+      crossorigin=""></script>
+    <!-- END LEAFLET -->
+    <title>SKYRAIDR - ALPHA</title>
+  </head>
+  <body>
+    <!-- LEAFLET -->
+    <div id="mapid" style = "width:1875px; height:925px;"></div>
+    <script>
+        var mymap = L.map('mapid').setView([33.6666, -117.869], 13);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.dark',
+            accessToken: 'pk.eyJ1IjoicGNhYnJ5YW4iLCJhIjoiY2szZXR2MzVmMDF6eTNtbHNkczlsNW1icSJ9.oFdBfEiVZfA6rMpj-erclQ' 
+        }).addTo(mymap);
+
+        mapMarkers1 = [];
+        mapMarkers2 = [];
+        mapMarkers3 = [];
+
+        var source = new EventSource('/topic/geodata_final'); //ENTER YOUR TOPICNAME HERE
+        source.addEventListener('message', function(e){
+
+        console.log('Message');
+        obj = JSON.parse(e.data);
+        console.log(obj);
+
+   
+        if(obj.airframe == 'AA0049') {
+            for (var i = 0; i < mapMarkers2.length; i++) {
+            mymap.removeLayer(mapMarkers2[i]);
+            }
+            marker2 = L.marker([obj.latitude, obj.longitude]).addTo(mymap);
+            mapMarkers2.push(marker2);
+        }
+        
+        }, false);
+    </script>
+    <!-- END LEAFLET -->
+  </body>
+</html>
